@@ -23,7 +23,11 @@ function ModalMsg(props) {
       </Modal.Header>
       <Modal.Body>{props.infosModal.conteudo}</Modal.Body>
       <Modal.Footer>
-        <button variant="secondary" onClick={handleClick}>
+        <button
+          variant="secondary"
+          onClick={handleClick}
+          className="btn btn-lg btn-dark m-3 login"
+        >
           Ok!
         </button>
       </Modal.Footer>
