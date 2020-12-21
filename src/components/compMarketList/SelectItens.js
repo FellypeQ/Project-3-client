@@ -101,11 +101,19 @@ function SelectItens(props) {
       console.error(err);
     }
   }
+
+  function handleDelete(event) {
+    let tempList = [...listaDND];
+    tempList[event.currentTarget.id.split(",")[0]][
+      `${event.currentTarget.name}`
+    ].splice(event.currentTarget.id.split(",")[1], 1);
+    setListaDND(tempList);
+  }
   //o return está com ternário porque no return não aceita if, mas eles olham de o state está prrenchido, e caso esteja rederiza uma tabela com o conteudo do seu respectivo state
   return (
     <React.Fragment>
       <ul className="bghistory3 bghistory2 ulCustom">
-        {listaDND.map((element, idx) =>
+        {listaDND.map((element, idxA) =>
           Object.values(element)[0].length > 0 ? (
             <div className="categoriesCustom">
               {Object.values(element).toString().length > 0 ? (
@@ -127,6 +135,14 @@ function SelectItens(props) {
                       id={Object.keys(element)}
                       className="mx-3 inputbar"
                     />
+                    <button
+                      onClick={handleDelete}
+                      id={[idxA, idx]}
+                      name={Object.keys(element)}
+                      className="custom-btn"
+                    >
+                      Exluir
+                    </button>
                   </li>
                 ))
               ) : (
@@ -141,14 +157,14 @@ function SelectItens(props) {
       <div className="d-flex justify-content-center ">
         {newList ? (
           <button className="btn btn-lg btn-dark m-3 login" onClick={handleNew}>
-            Salvar Lista
+            Criar Lista
           </button>
         ) : (
           <button
             className="btn btn-lg btn-dark m-3 login"
             onClick={handleEdit}
           >
-            Editar Lista
+            Alterar Lista
           </button>
         )}
       </div>
