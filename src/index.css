@@ -397,19 +397,18 @@ ul.options li.option-active {
   list-style-type: none;
   display: flex;
   flex-direction: column;
+  padding: 0%;
 }
 .produtoNaListaSalva {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .nomeDetalheListaSalva {
-  width: 20%;
+  width: auto;
   display: flex;
   flex-wrap: wrap;
 }
 .line-through {
   text-decoration: line-through;
-}
-.checkboxCustom {
-  background-color: #29a83a;
 }
