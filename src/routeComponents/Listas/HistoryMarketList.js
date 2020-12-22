@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Accordion, Button, Card } from "react-bootstrap";
 import { ReactComponent as CameraSvg } from "../../assets/camera-icon.svg";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import api from "../../apis/api";
 
 import ModalScroll from "../../components/ModalScroll";
+import ModalMsg from "../../components/ModalMsg";
 
 function HistoryMarketList(props) {
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState({ modal: false, product: "" });
+  const [showSave, setShowSave] = useState(false);
 
   useEffect(() => {
     async function fetchLists() {
@@ -34,12 +35,6 @@ function HistoryMarketList(props) {
     setShow({ modal: true, product: event.currentTarget.name });
   };
 
-  function handleOnDragEnd(result) {
-    //const items = [...lists[0]];
-    //const [reordedItems] = items.splice(result.source.index, 1);
-    //items.splice(result.destination.index, 0, reordedItems);
-    //setLists(items);
-  }
   function handleCheck(event) {
     let tempLists = [...lists];
     tempLists[event.currentTarget.id.split(",")[0]].Lista[
@@ -59,7 +54,6 @@ function HistoryMarketList(props) {
       IdUser: "",
       Lista: lists[event.currentTarget.name.split(",")[1]].Lista,
     };
-    console.log(lists[event.currentTarget.name.split(",")[1]].Lista);
     try {
       await api.patch(
         `${process.env.REACT_APP_API_BASE}/lista/${
@@ -67,6 +61,7 @@ function HistoryMarketList(props) {
         }`,
         listTodataBase
       );
+      setShowSave(true);
     } catch (err) {
       console.error(err);
     }
@@ -109,85 +104,60 @@ function HistoryMarketList(props) {
                   </Card.Header>
                   <Accordion.Collapse eventKey={`${idx}`}>
                     <Card.Body className="bghistory1">
-                      <DragDropContext onDragEnd={handleOnDragEnd}>
-                        <Droppable droppableId="">
-                          {(provided) => (
-                            <ul
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                              className="p-0"
-                            >
-                              {list.Lista.map((categories, idxC) => (
-                                <Draggable
-                                  draggableId={list._id + idxC}
-                                  index={list._id + idxC}
-                                  key={list._id + idxC}
-                                >
-                                  {(provided) => (
-                                    <div
-                                      className="text-center my-3"
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      ref={provided.innerRef}
-                                    >
-                                      <p className="font-weight-bold text-primary">
-                                        {Object.keys(categories)[0]}
-                                      </p>
-                                      <ul className="ListaDeProdutosPorCategoriaNasSalvas">
-                                        {Object.values(categories)[0].map(
-                                          (products, idxP) => (
-                                            <li
-                                              key={list._id + idxP}
-                                              className="text-primary produtoNaListaSalva"
-                                            >
-                                              <div>
-                                                <input
-                                                  type="checkbox"
-                                                  className="mr-3 checkboxCustom"
-                                                  onClick={handleCheck}
-                                                  id={[
-                                                    idx,
-                                                    idxC,
-                                                    Object.keys(categories)[0],
-                                                    idxP,
-                                                  ]}
-                                                  checked={
-                                                    products.comprado
-                                                      ? true
-                                                      : false
-                                                  }
-                                                />
-                                              </div>
-                                              <div
-                                                className={`nomeDetalheListaSalva ${
-                                                  products.comprado
-                                                    ? "line-through"
-                                                    : ""
-                                                }`}
-                                              >
-                                                {products.produto}
-                                                {` - ${products.detalhes}`}
-                                              </div>
-                                              <Link
-                                                onClick={handleClick}
-                                                name={products.produto}
-                                                to="#0"
-                                              >
-                                                <CameraSvg className="svg-css mx-4" />
-                                              </Link>
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
+                      <ul className="p-0">
+                        {list.Lista.map((categories, idxC) => (
+                          <div
+                            className="text-center my-3"
+                            key={list._id + idxC}
+                          >
+                            <p className="font-weight-bold text-primary">
+                              {Object.keys(categories)[0]}
+                            </p>
+                            <ul className="ListaDeProdutosPorCategoriaNasSalvas">
+                              {Object.values(categories)[0].map(
+                                (products, idxP) => (
+                                  <li
+                                    key={list._id + idxP}
+                                    className="text-primary produtoNaListaSalva"
+                                  >
+                                    <div>
+                                      <input
+                                        type="checkbox"
+                                        className="mr-3 checkboxCustom"
+                                        onChange={handleCheck}
+                                        id={[
+                                          idx,
+                                          idxC,
+                                          Object.keys(categories)[0],
+                                          idxP,
+                                        ]}
+                                        checked={
+                                          products.comprado ? true : false
+                                        }
+                                      />
                                     </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
+                                    <div
+                                      className={`nomeDetalheListaSalva ${
+                                        products.comprado ? "line-through" : ""
+                                      }`}
+                                    >
+                                      {products.produto}
+                                      {` - ${products.detalhes}`}
+                                    </div>
+                                    <Link
+                                      onClick={handleClick}
+                                      name={products.produto}
+                                      to="#0"
+                                    >
+                                      <CameraSvg className="svg-css mx-4" />
+                                    </Link>
+                                  </li>
+                                )
+                              )}
                             </ul>
-                          )}
-                        </Droppable>
-                      </DragDropContext>
+                          </div>
+                        ))}
+                      </ul>
                     </Card.Body>
                   </Accordion.Collapse>
                 </Card>
@@ -202,18 +172,22 @@ function HistoryMarketList(props) {
   return (
     <div>
       {renderAccordion()}
-      {show.modal ? (
-        <ModalScroll
-          infosModal={{
-            titulo: "Imagens relacionadas ao produto",
-            conteudo: show.product,
-          }}
-          show={show.modal}
-          close={setShow}
-        />
-      ) : (
-        <></>
-      )}
+      <ModalScroll
+        infosModal={{
+          titulo: "Imagens relacionadas ao produto",
+          conteudo: show.product,
+        }}
+        show={show.modal}
+        close={setShow}
+      />
+      <ModalMsg
+        infosModal={{
+          titulo: "Atualização de itens pegos",
+          conteudo: "Alterações salvas",
+        }}
+        show={showSave}
+        close={setShowSave}
+      />
     </div>
   );
 }

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import api from "../../apis/api";
 import { Container } from "react-bootstrap";
 
+import ModalMsg from "../../components/ModalMsg";
+
 function Signup(props) {
   const [state, setState] = useState({ name: "", password: "", email: "" });
   const [errors, setErrors] = useState({
@@ -10,6 +12,15 @@ function Signup(props) {
     email: null,
     password: null,
   });
+  const [show, setShow] = useState(false);
+  const [msgSgnup, setMsgSignup] = useState(
+    <div class="d-flex justify-content-around">
+      Por favor aguarde{" "}
+      <div class="spinner-border text-success " role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  );
   const [pswMsg, setPswMsg] = useState("");
 
   function handleChange(event) {
@@ -21,12 +32,12 @@ function Signup(props) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-
+    setShow(true);
     try {
       // eslint-disable-next-line no-unused-vars
       const response = await api.post("/signup", state);
       setErrors({ name: "", password: "", email: "" });
-      props.history.push("/auth/login");
+      setMsgSignup("Usuário criado com sucesso");
     } catch (err) {
       console.error(err);
       setPswMsg(err.response.data.errors.password);
@@ -99,6 +110,15 @@ function Signup(props) {
           <div className=" mb-4">.</div>
         </form>
       </div>
+      <ModalMsg
+        infosModal={{
+          titulo: "Criação de usuário",
+          conteudo: msgSgnup,
+          redirecionamento: "/auth/login",
+        }}
+        show={show}
+        close={setShow}
+      />
     </Container>
   );
 }
