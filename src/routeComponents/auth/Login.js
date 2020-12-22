@@ -4,6 +4,7 @@ import api from "../../apis/api";
 import { Container } from "react-bootstrap";
 
 import { AuthContext } from "../../contexts/authContext";
+import ModalMsg from "../../components/ModalMsg";
 
 function Login(props) {
   const authContext = useContext(AuthContext);
@@ -14,6 +15,15 @@ function Login(props) {
     password: null,
   });
   const [pswMsg, setPswMsg] = useState("");
+  const [show, setShow] = useState(false);
+  const [msgSgnup, setMsgSignup] = useState(
+    <div class="d-flex justify-content-around">
+      Por favor aguarde{" "}
+      <div class="spinner-border text-success " role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  );
 
   function handleChange(event) {
     setState({
@@ -24,7 +34,7 @@ function Login(props) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-
+    setShow(true);
     try {
       const response = await api.post("/login", state);
       authContext.setLoggedInUser({ ...response.data });
@@ -48,9 +58,7 @@ function Login(props) {
           className="mt-3 container  align-items-center  w-50 midpage"
           onSubmit={handleSubmit}
         >
-          <h1 className=" px-4 text-center">
-            Conectar-se
-          </h1>
+          <h1 className=" px-4 text-center">Conectar-se</h1>
 
           <div className="text-center form-group">
             <input
@@ -99,6 +107,15 @@ function Login(props) {
           <div className="mt-5">.</div>
         </form>
       </div>
+      <ModalMsg
+        infosModal={{
+          titulo: "Login no sistema",
+          conteudo: msgSgnup,
+          login: true,
+        }}
+        show={show}
+        close={setShow}
+      />
     </Container>
   );
 }
