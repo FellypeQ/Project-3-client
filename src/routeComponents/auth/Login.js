@@ -43,6 +43,7 @@ function Login(props) {
         JSON.stringify({ ...response.data })
       );
       setErrors({ password: "", email: "" });
+      setMsgSignup("Login efetuado com sucesso, boas compras!");
       props.history.push("/menus/lista");
     } catch (err) {
       setPswMsg(err.response.data.msg);

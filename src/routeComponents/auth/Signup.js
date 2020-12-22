@@ -38,6 +38,7 @@ function Signup(props) {
       const response = await api.post("/signup", state);
       setErrors({ name: "", password: "", email: "" });
       setMsgSignup("Usuário criado com sucesso");
+      props.history.push("/auth/login");
     } catch (err) {
       console.error(err);
       setPswMsg(err.response.data.errors.password);
@@ -114,7 +115,8 @@ function Signup(props) {
         infosModal={{
           titulo: "Criação de usuário",
           conteudo: msgSgnup,
-          redirecionamento: "/auth/login",
+          //redirecionamento: "/auth/login",
+          login: true,
         }}
         show={show}
         close={setShow}
