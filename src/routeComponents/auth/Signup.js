@@ -40,6 +40,7 @@ function Signup(props) {
       setMsgSignup("Usuário criado com sucesso");
       props.history.push("/auth/login");
     } catch (err) {
+      setShow(false);
       console.error(err);
       setPswMsg(err.response.data.errors.password);
       setErrors({ ...err.response.data.errors });

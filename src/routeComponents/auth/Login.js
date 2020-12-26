@@ -46,6 +46,7 @@ function Login(props) {
       setMsgSignup("Login efetuado com sucesso, boas compras!");
       props.history.push("/menus/lista");
     } catch (err) {
+      setShow(false);
       setPswMsg(err.response.data.msg);
       console.error(err.response);
       setErrors({ ...err.response.data.errors });
