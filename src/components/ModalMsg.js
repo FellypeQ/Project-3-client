@@ -16,16 +16,20 @@ function ModalMsg(props) {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {props.infosModal.titulo}
-        </Modal.Title>
-      </Modal.Header>
+      {props.infosModal.login ? (
+        <></>
+      ) : (
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            {props.infosModal.titulo}
+          </Modal.Title>
+        </Modal.Header>
+      )}
       <Modal.Body>{props.infosModal.conteudo}</Modal.Body>
-      <Modal.Footer>
-        {props.infosModal.login ? (
-          <></>
-        ) : (
+      {props.infosModal.login ? (
+        <></>
+      ) : (
+        <Modal.Footer>
           <button
             variant="secondary"
             onClick={handleClick}
@@ -33,8 +37,8 @@ function ModalMsg(props) {
           >
             Ok!
           </button>
-        )}
-      </Modal.Footer>
+        </Modal.Footer>
+      )}
     </Modal>
   );
 }
