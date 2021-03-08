@@ -3,7 +3,9 @@ import React, { useState, createContext, useEffect } from "react";
 const AuthContext = createContext({ token: "", user: {} });
 
 function AuthContextComponent(props) {
-  const [loggedInUser, setLoggedInUser] = useState({ token: "", user: {} });
+  const [loggedInUser, setLoggedInUser] = useState(
+    JSON.parse(localStorage.getItem("loggedInUser"))
+  );
 
   useEffect(() => {
     const storedUser = localStorage.getItem("loggedInUser");
